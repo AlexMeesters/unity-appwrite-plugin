@@ -40,7 +40,7 @@ and this allowed me to just fetch specific parameters.
 ### To install JSON. Net
 
 Add the following to the manifest.json in /YourProjectFolder/Packages/manifest.json  
-"com.unity.nuget.newtonsoft-json": "2.0.1-preview.1",
+"com.unity.nuget.newtonsoft-json": "3.0.2",
 
 ### Install TextMeshPro
 
