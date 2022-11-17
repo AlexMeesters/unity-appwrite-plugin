@@ -1,6 +1,6 @@
 {
     "name": "com.lowscope.appwriteplugin",
-    "version": "0.1",
+    "version": "0.1.0",
     "displayName": "Appwrite Plugin",
     "description": "Unofficial & non affiliated Appwrite plugin for Unity",
     "unity": "2020.1",
