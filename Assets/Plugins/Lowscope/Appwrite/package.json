@@ -22,7 +22,7 @@
         {
             "displayName": "Login & Register Menu",
             "description": "Example menu that displays the basic functionality of the plugin",
-            "path": "Samples~/LoginRegisterMenu"
+            "path": "Samples/LoginRegisterMenu"
         }
     ]
 }

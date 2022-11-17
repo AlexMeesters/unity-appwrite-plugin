@@ -47,6 +47,12 @@ Add the following to the manifest.json in /YourProjectFolder/Packages/manifest.j
 The example menu makes use of TextMeshPro.
 Go to the package manager and locate TextMeshPro and install it.
 
+
+### Alternatively : Quickly install using the Unity Package Manager
+```
+https://github.com/AlexMeesters/unity-appwrite-plugin.git?path=Assets/Plugins/Lowscope/Appwrite
+```
+
 ## 
 
 Once the project is installed and no errors occur. Run the game, and a file called "Appwrite Config" should appear in the Resources folder.  
