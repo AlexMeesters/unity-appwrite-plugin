@@ -59,3 +59,86 @@ Once the project is installed and no errors occur. Run the game, and a file call
 Configure it to connect to your Appwrite server.
 
 ![Config Example](https://github.com/AlexMeesters/unity-appwrite-plugin/blob/main/config_example.png)
+
+### Code Example
+
+```csharp
+
+using Lowscope.AppwritePlugin;
+using Lowscope.AppwritePlugin.Accounts.Enums;
+using Lowscope.AppwritePlugin.Accounts.Model;
+using UnityEngine;
+
+public class BasicUsage : MonoBehaviour
+{
+	public async void Start()
+	{
+		// Get user info from disk -> verify with server if session is valid. -> Not valid, then nullified.
+		User user = await Appwrite.Account.GetUser();
+
+		if (user != null)
+		{
+			string id = user.Id;
+			string name = user.Name;
+			string email = user.Email;
+			bool verifiedEmail = user.EmailVerified;
+		}
+	}
+
+	public async void Login(string email, string password)
+	{
+		var (user, response) = await Appwrite.Account.Login(email, password);
+
+		if (response == ELoginResponse.Success)
+		{
+			// Use user here.
+		}
+		else
+		{
+			Debug.Log($"Error occured: {response}");
+		}
+	}
+
+	public async void Register(string id, string name, string email, string password)
+	{
+		var (user, response) = await Appwrite.Account.Register(id, name, email, password);
+
+		if (response == ERegisterResponse.Success)
+		{
+			// Use user here
+			// User can opt to send verify email directly after
+		}
+		else
+		{
+			Debug.Log($"Error occured: {response}");
+		}
+	}
+
+	public async void VerifyEmail()
+	{
+		// Sends request from current user session
+		var response = await Appwrite.Account.RequestVerificationMail();
+
+		if (response == EEmailVerifyResponse.Sent)
+		{
+			// Email has been sent!
+		}
+		else
+		{
+			Debug.Log($"Error occured: {response}");
+		}
+	}
+
+	public async void GetJwt()
+	{
+		// Sends request from current user session
+		var jwt = await Appwrite.Account.ObtainJwt();
+
+		if (string.IsNullOrEmpty(jwt))
+		{
+			// Use the JWT. Cached based on duration specified in configuration.
+		}
+	}
+}
+
+```
