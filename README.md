@@ -48,7 +48,7 @@ The example menu makes use of TextMeshPro.
 Go to the package manager and locate TextMeshPro and install it.
 
 
-### Alternatively : Quickly install using the Unity Package Manager
+### Easy install using the Unity Package Manager
 ```
 https://github.com/AlexMeesters/unity-appwrite-plugin.git?path=Assets/Plugins/Lowscope/Appwrite
 ```
