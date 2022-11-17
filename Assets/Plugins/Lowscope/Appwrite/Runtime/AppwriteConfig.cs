@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Lowscope.Appwrite
+namespace Lowscope.AppwritePlugin
 {
 	public class AppwriteConfig : ScriptableObject
 	{

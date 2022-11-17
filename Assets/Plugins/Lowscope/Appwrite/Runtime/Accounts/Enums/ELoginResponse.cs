@@ -1,4 +1,4 @@
-﻿namespace Lowscope.Appwrite.Accounts.Enums
+﻿namespace Lowscope.AppwritePlugin.Accounts.Enums
 {
 	public enum ELoginResponse
 	{

@@ -1,4 +1,4 @@
-﻿namespace Lowscope.Appwrite.Accounts.Enums
+﻿namespace Lowscope.AppwritePlugin.Accounts.Enums
 {
 	public enum ERegisterResponse
 	{
@@ -8,6 +8,7 @@
 		AlreadyLoggedIn,
 		ServerBusy,
 		NoConnection,
-		Timeout
+		Timeout,
+		InvalidEmail
 	}
 }

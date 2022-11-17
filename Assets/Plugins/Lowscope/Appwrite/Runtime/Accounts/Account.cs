@@ -4,14 +4,14 @@ using System.IO;
 using System.Net;
 using System.Text;
 using Cysharp.Threading.Tasks;
-using Lowscope.Appwrite.Accounts.Enums;
-using Lowscope.Appwrite.Accounts.Model;
-using Lowscope.Appwrite.Utils;
+using Lowscope.AppwritePlugin.Accounts.Enums;
+using Lowscope.AppwritePlugin.Accounts.Model;
+using Lowscope.AppwritePlugin.Utils;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using WebRequest = Lowscope.Appwrite.Utils.WebRequest;
+using WebRequest = Lowscope.AppwritePlugin.Utils.WebRequest;
 
-namespace Lowscope.Appwrite.Accounts
+namespace Lowscope.AppwritePlugin.Accounts
 {
 	public class Account
 	{
@@ -24,7 +24,7 @@ namespace Lowscope.Appwrite.Accounts
 
 		private string UserPath => Path.Combine(Application.persistentDataPath, "user.json");
 
-		public Account(AppwriteConfig config)
+		internal Account(AppwriteConfig config)
 		{
 			this.config = config;
 
@@ -73,6 +73,9 @@ namespace Lowscope.Appwrite.Accounts
 			return true;
 		}
 
+		/// <summary>
+		/// Creates a session. Cookie is stored on disk and other requests will use the current session.
+		/// </summary>
 		public async UniTask<(User, ELoginResponse)> Login(string email, string password)
 		{
 			if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
@@ -135,8 +138,15 @@ namespace Lowscope.Appwrite.Accounts
 			return (user, ELoginResponse.Success);
 		}
 
+		/// <summary>
+		/// Send a register request. Will automatically login afterwards. Do note that a validation email is not
+		/// send automatically. You have to call the specific function for it after registering.
+		/// </summary>
 		public async UniTask<(User, ERegisterResponse)> Register(string id, string name, string email, string password)
 		{
+			if (!WebUtilities.IsEmailValid(email))
+				return (null, ERegisterResponse.InvalidEmail);
+				
 			if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email))
 				return (null, ERegisterResponse.MissingCredentials);
 
@@ -180,6 +190,10 @@ namespace Lowscope.Appwrite.Accounts
 			return (u, ERegisterResponse.Success);
 		}
 
+		/// <summary>
+		/// Clears current session and removes any stored data regarding the user.
+		/// </summary>
+		/// <returns></returns>
 		public async UniTask<bool> Logout()
 		{
 			if (user == null)
@@ -225,6 +239,10 @@ namespace Lowscope.Appwrite.Accounts
 			return jwt;
 		}
 
+		/// <summary>
+		/// Sends a verification mail to the user. Provided with the url that is set in the config file.
+		/// Read more about verification emails in the Appwrite documentation.
+		/// </summary>
 		public async UniTask<EEmailVerifyResponse> RequestVerificationMail()
 		{
 			if (user == null)
@@ -253,10 +271,19 @@ namespace Lowscope.Appwrite.Accounts
 			return httpStatusCode == HttpStatusCode.Created ? EEmailVerifyResponse.Sent : EEmailVerifyResponse.Failed;
 		}
 
-		public async UniTask<User> GetUser()
+		/// <summary>
+		/// Obtains user information
+		/// </summary>
+		/// <param name="fromCache">Do we want to get the user information from the server?
+		/// Can be useful to verify if session is still valid.</param>
+		/// <returns></returns>
+		public async UniTask<User> GetUser(bool fromCache = false)
 		{
 			if (user == null)
 				return null;
+
+			if (fromCache)
+				return user;
 
 			if (await RefreshUserInfo())
 				return user;

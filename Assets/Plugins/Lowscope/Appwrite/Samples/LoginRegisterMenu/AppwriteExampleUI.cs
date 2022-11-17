@@ -1,8 +1,8 @@
 using System.Text;
 using Cysharp.Threading.Tasks;
-using Lowscope.Appwrite;
-using Lowscope.Appwrite.Accounts.Enums;
-using Lowscope.Appwrite.Accounts.Model;
+using Lowscope.AppwritePlugin;
+using Lowscope.AppwritePlugin.Accounts.Enums;
+using Lowscope.AppwritePlugin.Accounts.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

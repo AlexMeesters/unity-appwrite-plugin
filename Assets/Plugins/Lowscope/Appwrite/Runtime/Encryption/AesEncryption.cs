@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 // Most code from example: https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.aes?view=net-6.0
 
-namespace Lowscope.Appwrite.Accounts.Encryption
+namespace Lowscope.AppwritePlugin.Accounts.Encryption
 {
 	public class AesEncryption
 	{

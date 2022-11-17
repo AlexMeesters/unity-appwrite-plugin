@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
-using Lowscope.Appwrite.Accounts.Encryption;
+using Lowscope.AppwritePlugin.Accounts.Encryption;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Lowscope.Appwrite.Utils
+namespace Lowscope.AppwritePlugin.Utils
 {
 	public class FileUtilities
 	{

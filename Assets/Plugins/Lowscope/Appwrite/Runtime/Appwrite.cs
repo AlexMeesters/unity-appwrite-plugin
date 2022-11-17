@@ -1,8 +1,8 @@
 using System;
-using Lowscope.Appwrite.Accounts;
+using Lowscope.AppwritePlugin.Accounts;
 using UnityEngine;
 
-namespace Lowscope.Appwrite
+namespace Lowscope.AppwritePlugin
 {
 	public class Appwrite : MonoBehaviour
 	{

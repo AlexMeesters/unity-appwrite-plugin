@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Lowscope.Appwrite.Accounts.Model
+namespace Lowscope.AppwritePlugin.Accounts.Model
 {
 	public class User
 	{

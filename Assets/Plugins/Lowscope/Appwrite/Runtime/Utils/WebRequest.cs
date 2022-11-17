@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Net;
 using Cysharp.Threading.Tasks;
-using Lowscope.Appwrite.Accounts.Enums;
+using Lowscope.AppwritePlugin.Accounts.Enums;
 using UnityEngine.Networking;
 
-namespace Lowscope.Appwrite.Utils
+namespace Lowscope.AppwritePlugin.Utils
 {
 	public class WebRequest : IDisposable
 	{
