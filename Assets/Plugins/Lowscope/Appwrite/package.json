@@ -1,0 +1,28 @@
+{
+    "name": "com.lowscope.appwriteplugin",
+    "version": "0.1",
+    "displayName": "Appwrite Plugin",
+    "description": "Unofficial & non affiliated Appwrite plugin for Unity",
+    "unity": "2020.1",
+    "documentationUrl": "https://github.com/AlexMeesters/unity-appwrite-plugin",
+    "changelogUrl": "https://github.com/AlexMeesters/unity-appwrite-plugin/releases/tag/v0.1",
+    "licensesUrl": "https://github.com/AlexMeesters/unity-appwrite-plugin/blob/main/LICENSE",
+    "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.1-preview.1"
+   },
+   "keywords": [
+      "Appwrite"
+    ],
+    "author": {
+      "name": "Alex Meesters",
+      "email": "info@low-scope.com",
+      "url": "https://www.low-scope.com"
+    },
+    "samples": [
+        {
+            "displayName": "Login & Register Menu",
+            "description": "Example menu that displays the basic functionality of the plugin",
+            "path": "Samples~/LoginRegisterMenu"
+        }
+    ]
+}
