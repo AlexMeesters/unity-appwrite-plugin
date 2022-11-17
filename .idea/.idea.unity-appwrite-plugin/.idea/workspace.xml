@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3d16a65e-8ae2-4c68-821b-fc9d11157250" name="Changes" comment="" />
+    <list default="true" id="3d16a65e-8ae2-4c68-821b-fc9d11157250" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Lowscope/Appwrite/Runtime/Accounts/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Lowscope/Appwrite/Runtime/Accounts/Account.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,6 +62,7 @@
       <updated>1668638637160</updated>
       <workItem from="1668638643928" duration="8000" />
       <workItem from="1668639733291" duration="1550000" />
+      <workItem from="1668691147024" duration="307000" />
     </task>
     <servers />
   </component>

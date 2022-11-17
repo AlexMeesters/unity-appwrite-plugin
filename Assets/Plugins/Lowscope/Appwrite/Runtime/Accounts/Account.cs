@@ -60,9 +60,9 @@ namespace Lowscope.Appwrite.Accounts
 
 			if (httpStatusCode == HttpStatusCode.OK)
 			{
-				dynamic parsedData = JObject.Parse(json);
-				user.Name = parsedData.name;
-				user.EmailVerified = parsedData.emailVerification;
+				JObject parsedData = JObject.Parse(json);
+				user.Name = (string)parsedData.GetValue("name");
+				user.EmailVerified = (bool)parsedData.GetValue("emailVerification");
 				StoreUserToDisk();
 			}
 			else
@@ -116,13 +116,13 @@ namespace Lowscope.Appwrite.Accounts
 						return (null, ELoginResponse.ServerBusy);
 				}
 			}
-			
-			dynamic parsedData = JObject.Parse(json);
+
+			JObject parsedData = JObject.Parse(json);
 
 			user = new User
 			{
-				Id = parsedData.userId,
-				Email = parsedData.providerUid,
+				Id = (string)parsedData.GetValue("userId"),
+				Email = (string)parsedData.GetValue("providerUid"),
 				Cookie = request.ExtractCookie()
 			};
 
@@ -139,7 +139,7 @@ namespace Lowscope.Appwrite.Accounts
 		{
 			if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email))
 				return (null, ERegisterResponse.MissingCredentials);
-			
+
 			if (user != null)
 				return (user, ERegisterResponse.AlreadyLoggedIn);
 
@@ -214,15 +214,15 @@ namespace Lowscope.Appwrite.Accounts
 			if (httpStatusCode != HttpStatusCode.Created)
 				return "";
 
-			dynamic parsedData = JObject.Parse(json);
+			JObject parsedData = JObject.Parse(json);
 
-			string jwt = parsedData.jwt;
+			string jwt = (string)parsedData.GetValue("jwt");
 			user.Jwt = jwt;
 
 			// Remove minute to account for latency.
 			user.JwtProvideDate = DateTime.Now - TimeSpan.FromMinutes(1);
 
-			return parsedData.jwt;
+			return jwt;
 		}
 
 		public async UniTask<EEmailVerifyResponse> RequestVerificationMail()
