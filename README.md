@@ -73,7 +73,8 @@ public class BasicUsage : MonoBehaviour
 {
 	public async void Start()
 	{
-		// Get user info from disk -> verify with server if session is valid. -> Not valid, then nullified.
+		// Get user info from disk -> verify with server if session is valid. 
+		// -> Not valid, then nullified.
 		User user = await Appwrite.Account.GetUser();
 
 		if (user != null)
