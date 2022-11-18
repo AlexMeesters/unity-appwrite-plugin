@@ -135,7 +135,7 @@ public class BasicUsage : MonoBehaviour
 		// Sends request from current user session
 		var jwt = await Appwrite.Account.ObtainJwt();
 
-		if (string.IsNullOrEmpty(jwt))
+		if (!string.IsNullOrEmpty(jwt))
 		{
 			// Use the JWT. Cached based on duration specified in configuration.
 		}
