@@ -2,8 +2,8 @@
 
 **Still in early development. Not yet battle tested.**
 
-So far this plugin only supports some of the account features & storing of cookies.  
-Logins are automatically stored on disk for ease of use.
+So far this plugin only supports some of the account features & storing of session cookie.  
+Cookies & user info is automatically stored on disk for ease of use.
 
 Current features
  - Login
