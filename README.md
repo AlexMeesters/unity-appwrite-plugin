@@ -2,7 +2,7 @@
 
 **Still in early development. Not yet battle tested.**
 
-So far the Unity plugin for Appwrite supports some of the account features. 
+So far the Unity plugin for Appwrite supports some of the account features. \
 It stores the session cookie automatically for you, meaning you keep your session even upon restart.
 
 Current features
