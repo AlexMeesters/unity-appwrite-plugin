@@ -2,8 +2,8 @@
 
 **Still in early development. Not yet battle tested.**
 
-So far this plugin only supports some of the account features & storing of session cookie.  
-Cookies & user info is automatically stored on disk for ease of use.
+So far the Unity plugin for Appwrite supports some of the account features. 
+It stores the session cookie automatically for you, meaning you keep your session even upon restart.
 
 Current features
  - Login
@@ -27,7 +27,7 @@ Dependencies
 
 ### Install UniTask
 
-This package relies on UniTask, a package that uses a lot less allocations for C# Tasks.  
+This package makes use of UniTask, a package that uses a lot less allocations for C# Tasks.  
 It also makes deploying to WebGL easier as regular Tasks cause errors with WebGL.  
 To install UniTask go here: https://github.com/Cysharp/UniTask#upm-package
 
