@@ -15,8 +15,8 @@ namespace Lowscope.AppwritePlugin.Accounts
 {
 	public class Account
 	{
-		public readonly Action<User> OnLogin = delegate {  };
-		public readonly Action OnLogout = delegate {  };
+		public Action<User> OnLogin = delegate {  };
+		public Action OnLogout = delegate {  };
 
 		private readonly AppwriteConfig config;
 		private readonly Dictionary<string, string> headers;
