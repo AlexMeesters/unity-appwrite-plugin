@@ -15,6 +15,9 @@ namespace Lowscope.AppwritePlugin.Accounts
 {
 	public class Account
 	{
+		public readonly Action<User> OnLogin = delegate {  };
+		public readonly Action OnLogout = delegate {  };
+
 		private readonly AppwriteConfig config;
 		private readonly Dictionary<string, string> headers;
 
@@ -39,7 +42,11 @@ namespace Lowscope.AppwritePlugin.Accounts
 		}
 
 		private void StoreUserToDisk()
-			=> FileUtilities.Write(user, UserPath, config);
+		{
+			FileUtilities.Write(user, UserPath, config);
+			
+			OnLogin(user);
+		}
 
 		private void ClearUserDataFromDisk()
 		{
@@ -47,6 +54,8 @@ namespace Lowscope.AppwritePlugin.Accounts
 				File.Delete(UserPath);
 
 			user = null;
+			
+			OnLogout();
 		}
 
 		private async UniTask<bool> RefreshUserInfo()
