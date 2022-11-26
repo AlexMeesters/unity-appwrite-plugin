@@ -101,7 +101,7 @@ public class AppwriteExampleUI : MonoBehaviour
 	private async UniTask UpdateInfo(bool refreshFromServer)
 	{
 		if (refreshFromServer)
-			user = await Appwrite.Account.GetUserInfo(true);
+			user = await Appwrite.Account.GetUser(true);
 
 		bool hasUser = user != null;
 		

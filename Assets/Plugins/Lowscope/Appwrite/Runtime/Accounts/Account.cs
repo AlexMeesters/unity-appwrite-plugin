@@ -310,7 +310,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 		/// <param name="fromServer">Do we want to get the user information from the server?
 		/// Can be useful to verify if session is still valid.</param>
 		/// <returns></returns>
-		public async UniTask<User> GetUserInfo(bool fromServer = false)
+		public async UniTask<User> GetUser(bool fromServer = false)
 		{
 			if (user == null)
 				return null;
