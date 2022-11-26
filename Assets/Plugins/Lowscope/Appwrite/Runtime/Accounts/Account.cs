@@ -22,9 +22,10 @@ namespace Lowscope.AppwritePlugin.Accounts
 		private readonly Dictionary<string, string> headers;
 
 		private User user;
-
 		private DateTime lastRegisterRequestDate;
 
+		private bool validatedSession = false;
+		
 		private string UserPath => Path.Combine(Application.persistentDataPath, "user.json");
 
 		internal Account(AppwriteConfig config)
@@ -44,27 +45,32 @@ namespace Lowscope.AppwritePlugin.Accounts
 		private void StoreUserToDisk()
 		{
 			FileUtilities.Write(user, UserPath, config);
+
+			if (validatedSession) 
+				return;
+			
+			validatedSession = true;
 			
 			OnLogin(user);
 		}
 
 		private void ClearUserDataFromDisk()
 		{
+			user = null;
+			validatedSession = false;
 			if (File.Exists(UserPath))
 				File.Delete(UserPath);
 
-			user = null;
-			
 			OnLogout();
 		}
 
-		private async UniTask<bool> RefreshUserInfo()
+		private async UniTask<bool> RequestUserInfo()
 		{
 			if (user == null)
 				return false;
 
 			string url = $"{config.AppwriteURL}/account";
-			using var request = new WebRequest(EWebRequestType.GET, url, headers, user?.Cookie);
+			using var request = new WebRequest(EWebRequestType.GET, url, headers, user.Cookie);
 			var (json, httpStatusCode) = await request.Send();
 
 			if (httpStatusCode == HttpStatusCode.OK)
@@ -76,6 +82,15 @@ namespace Lowscope.AppwritePlugin.Accounts
 			}
 			else
 			{
+				// Session has become invalid, not able to utilize session anymore.
+				switch (httpStatusCode)
+				{
+					case HttpStatusCode.Unauthorized:
+					case HttpStatusCode.NotFound:
+						ClearUserDataFromDisk();
+						break;
+				}
+				
 				return false;
 			}
 
@@ -140,7 +155,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 
 			// Attempts to get account info to fill in additional user data such as 
 			// If email is verified and Name.
-			if (!await RefreshUserInfo())
+			if (!await RequestUserInfo())
 				return (null, ELoginResponse.Failed);
 
 			StoreUserToDisk();
@@ -273,6 +288,15 @@ namespace Lowscope.AppwritePlugin.Accounts
 			string url = $"{config.AppwriteURL}/account/verification";
 			using var request = new WebRequest(EWebRequestType.POST, url, headers, user.Cookie, bytes);
 			var (json, httpStatusCode) = await request.Send();
+			
+			// Session has become invalid, not able to utilize session anymore.
+			switch (httpStatusCode)
+			{
+				case HttpStatusCode.Unauthorized:
+				case HttpStatusCode.NotFound:
+					ClearUserDataFromDisk();
+					return EEmailVerifyResponse.NotLoggedIn;
+			}
 
 			user.LastEmailRequestDate = DateTime.Now;
 			StoreUserToDisk();
@@ -283,21 +307,19 @@ namespace Lowscope.AppwritePlugin.Accounts
 		/// <summary>
 		/// Obtains user information
 		/// </summary>
-		/// <param name="fromCache">Do we want to get the user information from the server?
+		/// <param name="fromServer">Do we want to get the user information from the server?
 		/// Can be useful to verify if session is still valid.</param>
 		/// <returns></returns>
-		public async UniTask<User> GetUser(bool fromCache = false)
+		public async UniTask<User> GetUserInfo(bool fromServer = false)
 		{
 			if (user == null)
 				return null;
 
-			if (fromCache)
+			if (!fromServer)
 				return user;
 
-			if (await RefreshUserInfo())
+			if (await RequestUserInfo())
 				return user;
-
-			ClearUserDataFromDisk();
 
 			return null;
 		}
