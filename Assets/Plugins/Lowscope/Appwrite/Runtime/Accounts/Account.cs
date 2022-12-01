@@ -123,7 +123,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 
 			using var request = new WebRequest(EWebRequestType.POST, url, headers, user?.Cookie, bytes);
 
-			var (json, httpStatusCode) = await request.Send();
+			var (body, httpStatusCode) = await request.Send();
 
 			if (httpStatusCode != HttpStatusCode.Created)
 			{
@@ -133,7 +133,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 						return (null, ELoginResponse.NoConnection);
 					case HttpStatusCode.Unauthorized:
 					case HttpStatusCode.NotFound:
-						return (null, json.Contains("blocked")
+						return (null, body.Contains("blocked")
 							? ELoginResponse.Blocked
 							: ELoginResponse.WrongCredentials);
 					case HttpStatusCode.ServiceUnavailable
@@ -142,9 +142,12 @@ namespace Lowscope.AppwritePlugin.Accounts
 						or HttpStatusCode.TooManyRequests:
 						return (null, ELoginResponse.ServerBusy);
 				}
+				
+				Debug.Log($"Unimplemented: {httpStatusCode} {body}");
+				return (null, ELoginResponse.Failed);
 			}
 
-			JObject parsedData = JObject.Parse(json);
+			JObject parsedData = JObject.Parse(body);
 
 			user = new User
 			{
@@ -192,7 +195,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 
 			using var request = new WebRequest(EWebRequestType.POST, url, headers, user?.Cookie, bytes);
 
-			var (_, httpStatusCode) = await request.Send();
+			var (body, httpStatusCode) = await request.Send();
 
 			if (httpStatusCode != HttpStatusCode.Created)
 			{
@@ -207,7 +210,14 @@ namespace Lowscope.AppwritePlugin.Accounts
 						or HttpStatusCode.InternalServerError
 						or HttpStatusCode.TooManyRequests:
 						return (null, ERegisterResponse.ServerBusy);
+					case HttpStatusCode.BadRequest:
+						if (body.Contains("Invalid email"))
+							return (null, ERegisterResponse.InvalidEmail);
+						break;
 				}
+				
+				Debug.Log($"Unimplemented: {httpStatusCode} {body}");
+				return (null, ERegisterResponse.Failed);
 			}
 
 			var (u, _) = await Login(email, password);
