@@ -1,15 +1,23 @@
-using System.Text.RegularExpressions;
+using System;
+using System.Net.Mail;
 
 namespace Lowscope.AppwritePlugin.Utils
 {
 	public static class WebUtilities
 	{
+		// Very basic validation check
 		public static bool IsEmailValid(string email)
 		{
-			Regex regex =
-				new Regex(
-					@"^[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$");
-			return regex.Match(email).Success;
+			try
+			{
+				MailAddress m = new MailAddress(email);
+
+				return true;
+			}
+			catch (FormatException)
+			{
+				return false;
+			}
 		}
 	}
 }
