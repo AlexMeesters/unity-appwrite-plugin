@@ -15,8 +15,8 @@ namespace Lowscope.AppwritePlugin.Accounts
 {
 	public class Account
 	{
-		public Action<User> OnLogin = delegate {  };
-		public Action OnLogout = delegate {  };
+		public Action<User> OnLogin = delegate { };
+		public Action OnLogout = delegate { };
 
 		private readonly AppwriteConfig config;
 		private readonly Dictionary<string, string> headers;
@@ -25,7 +25,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 		private DateTime lastRegisterRequestDate;
 
 		private bool validatedSession = false;
-		
+
 		private string UserPath => Path.Combine(Application.persistentDataPath, "user.json");
 
 		internal Account(AppwriteConfig config)
@@ -46,11 +46,11 @@ namespace Lowscope.AppwritePlugin.Accounts
 		{
 			FileUtilities.Write(user, UserPath, config);
 
-			if (validatedSession) 
+			if (validatedSession)
 				return;
-			
+
 			validatedSession = true;
-			
+
 			OnLogin(user);
 		}
 
@@ -90,7 +90,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 						ClearUserDataFromDisk();
 						break;
 				}
-				
+
 				return false;
 			}
 
@@ -142,7 +142,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 						or HttpStatusCode.TooManyRequests:
 						return (null, ELoginResponse.ServerBusy);
 				}
-				
+
 				Debug.Log($"Unimplemented: {httpStatusCode} {body}");
 				return (null, ELoginResponse.Failed);
 			}
@@ -173,7 +173,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 		{
 			if (!WebUtilities.IsEmailValid(email))
 				return (null, ERegisterResponse.InvalidEmail);
-				
+
 			if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email))
 				return (null, ERegisterResponse.MissingCredentials);
 
@@ -215,7 +215,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 							return (null, ERegisterResponse.InvalidEmail);
 						break;
 				}
-				
+
 				Debug.Log($"Unimplemented: {httpStatusCode} {body}");
 				return (null, ERegisterResponse.Failed);
 			}
@@ -298,7 +298,7 @@ namespace Lowscope.AppwritePlugin.Accounts
 			string url = $"{config.AppwriteURL}/account/verification";
 			using var request = new WebRequest(EWebRequestType.POST, url, headers, user.Cookie, bytes);
 			var (json, httpStatusCode) = await request.Send();
-			
+
 			// Session has become invalid, not able to utilize session anymore.
 			switch (httpStatusCode)
 			{
@@ -312,6 +312,33 @@ namespace Lowscope.AppwritePlugin.Accounts
 			StoreUserToDisk();
 
 			return httpStatusCode == HttpStatusCode.Created ? EEmailVerifyResponse.Sent : EEmailVerifyResponse.Failed;
+		}
+
+		public async UniTask<EAccountRecoverResponse> RequestPasswordRecovery(string email)
+		{
+			if (!WebUtilities.IsEmailValid(email))
+				return EAccountRecoverResponse.InvalidEmail;
+			
+			if (user != null)
+				return EAccountRecoverResponse.AlreadyLoggedIn;
+
+			JObject obj = new JObject(new JProperty("email", email), new JProperty("url", config.RecoverPasswordURL));
+			byte[] bytes = Encoding.UTF8.GetBytes(obj.ToString());
+
+			string url = $"{config.AppwriteURL}/account/recovery";
+			using var request = new WebRequest(EWebRequestType.POST, url, headers, "", bytes);
+			var (json, httpStatusCode) = await request.Send();
+
+			switch (httpStatusCode)
+			{
+				case HttpStatusCode.Unauthorized:
+				case HttpStatusCode.NotFound:
+					return EAccountRecoverResponse.Failed;
+			}
+
+			return httpStatusCode == HttpStatusCode.Created
+				? EAccountRecoverResponse.Sent
+				: EAccountRecoverResponse.Failed;
 		}
 
 		/// <summary>

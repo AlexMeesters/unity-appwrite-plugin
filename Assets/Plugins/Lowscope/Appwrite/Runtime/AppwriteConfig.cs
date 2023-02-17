@@ -11,7 +11,8 @@ namespace Lowscope.AppwritePlugin
 		public string AppwriteProjectID = "MyAppwriteProjectID";
 
 		[Header("Account")]
-		public string VerifyEmailURL = "MyVerifyMailEndpoint";
+		public string VerifyEmailURL = "https://myfrontendwebsitehere.com/verifymail";
+		public string RecoverPasswordURL = "https://myfrontendwebsitehere.com/recover";
 
 		public float JwtExpireMinutes = 15;
 		public float VerifyEmailTimeoutMinutes = 5;

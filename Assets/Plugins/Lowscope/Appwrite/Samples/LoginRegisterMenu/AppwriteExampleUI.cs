@@ -5,6 +5,7 @@ using Lowscope.AppwritePlugin.Accounts.Enums;
 using Lowscope.AppwritePlugin.Accounts.Model;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class AppwriteExampleUI : MonoBehaviour
@@ -21,6 +22,7 @@ public class AppwriteExampleUI : MonoBehaviour
 	[SerializeField] private Button buttonRefreshInfo;
 	[SerializeField] private Button buttonRegister;
 	[SerializeField] private Button buttonVerifyMail;
+	[SerializeField] private Button buttonRecoverAccount;
 
 	[SerializeField] private TextMeshProUGUI infoText;
 
@@ -34,9 +36,23 @@ public class AppwriteExampleUI : MonoBehaviour
 		buttonRefreshInfo.onClick.AddListener(OnButtonRefreshInfo);
 		buttonVerifyMail.onClick.AddListener(OnButtonVerifyMail);
 		buttonRegister.onClick.AddListener(OnButtonRegister);
-
+		buttonRecoverAccount.onClick.AddListener(OnButtonRecoverAccount);
+		inputFieldEmail.onValueChanged.AddListener(OnChangedEmailValue);
+		
 		// Attempts to get/validate (saved) information from server
 		await UpdateInfo(true);
+	}
+
+	private void OnChangedEmailValue(string email)
+	{
+		buttonRecoverAccount.interactable = !string.IsNullOrEmpty(email);
+	}
+
+	private async void OnButtonRecoverAccount()
+	{
+		string email = inputFieldEmail.text;
+		var response = await Appwrite.Account.RequestPasswordRecovery(email);
+		Debug.Log($"Email recovery. Response: {response}");
 	}
 
 	private async void OnButtonLogin()
@@ -60,7 +76,7 @@ public class AppwriteExampleUI : MonoBehaviour
 		bool hasLoggedOut = await Appwrite.Account.Logout();
 		Debug.Log(!hasLoggedOut ? "Unable to logout. No session active." : "User logged out. Cookies cleared.");
 		user = null;
-		
+
 		await UpdateInfo(false);
 	}
 
@@ -104,7 +120,7 @@ public class AppwriteExampleUI : MonoBehaviour
 			user = await Appwrite.Account.GetUser(true);
 
 		bool hasUser = user != null;
-		
+
 		if (hasUser)
 		{
 			StringBuilder sb = new StringBuilder();
